@@ -1,3 +1,7 @@
+// This is an API that can turn on and turn off an server of minecraft
+// I hoted mi server in an Oracle Cloud VM instance wirh Ubuntu
+// so this code just connects to the instance and turn on or off the server
+
 const { Client } = require('ssh2');
 const express = require('express');
 const app = express();
@@ -58,7 +62,7 @@ app.post('/encender', async (req, res) => {
 app.post('/apagar', async (req, res) => {
   try {
     
-    const command = `sudo killall screen`;
+    const command = `sudo killall screen && cd ..`;
     await connectToOracleVM(command);
     res.send('Servidor apagado correctamente.');
   } catch (error) {
