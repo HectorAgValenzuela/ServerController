@@ -72,7 +72,7 @@ app.post('/apagar', async (req, res) => {
 });
 
 // Iniciar el servidor web
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;;
 app.listen(PORT, () => {
   console.log(`Servidor web iniciado en el puerto ${PORT}`);
 });
