@@ -36,7 +36,7 @@ function connectToOracleVM(command) {
       });
     }).connect({
         host: process.env.host,
-        port: process.env.port,
+        port: process.env.portServer,
         username: process.env.usernameHost,
         privateKey: process.env.privateKey
     });
