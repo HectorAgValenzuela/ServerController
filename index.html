@@ -4,16 +4,85 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Control de Servidor</title>
+
+  <style>
+    #console-output {
+      width: 100%;
+      height: 300px;
+      overflow-y: scroll;
+      border: 1px solid #000;
+      padding: 10px;
+    }
+  </style>
+
 </head>
 <body>
   <h1>Server Controller</h1>
   
-  <form action="/encender" method="POST">
+  <form id="encender-form">
     <button type="submit">Encender Servidor</button>
   </form>
   
-  <form action="/apagar" method="POST">
+  <form id="apagar-form">
     <button type="submit">Apagar Servidor</button>
   </form>
+
+  <form id="reiniciar-form">
+    <button type="submit">Reiniciar máquina virtual</button>
+  </form>
+
+  <div id="console-output"></div>
+
+  <script>
+
+document.getElementById('encender-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      fetch('/encender', { method: 'POST' })
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('console-output').innerHTML = text.replace(/\n/g, '<br>');
+        })
+        .catch(error => console.error('Error al encender el servidor:', error));
+    });
+
+    document.getElementById('apagar-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      fetch('/apagar', { method: 'POST' })
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('console-output').innerHTML = text.replace(/\n/g, '<br>');
+        })
+        .catch(error => console.error('Error al apagar el servidor:', error));
+    });
+
+    document.getElementById('reiniciar-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      fetch('/reiniciar', { method: 'POST' })
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('console-output').innerHTML = text.replace(/\n/g, '<br>');
+        })
+        .catch(error => console.error('Error al apagar el servidor:', error));
+    });
+
+    const consoleOutput = document.getElementById('console-output');
+
+    async function fetchConsoleOutput() {
+      try {
+        const response = await fetch('/console-output', { method: 'GET' });
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const text = await response.text();
+        consoleOutput.innerHTML = text.replace(/\n/g, '<br>');
+        consoleOutput.scrollTop = consoleOutput.scrollHeight;
+      } catch (error) {
+        consoleOutput.innerHTML += `<div style="color: red;">Error: ${error}</div>`;
+      }
+    }
+
+    setInterval(fetchConsoleOutput, 2000);
+  </script>
+
 </body>
 </html>
