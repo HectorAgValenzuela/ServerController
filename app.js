@@ -1,18 +1,18 @@
-// This is an API that can turn on and turn off an server of minecraft
-// I hoted mi server in an Oracle Cloud VM instance wirh Ubuntu
-// so this code just connects to the instance and turn on or off the server
-
 const { Client } = require('ssh2');
 const express = require('express');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const cors = require('cors');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-let output = '';
+// Crear servidor HTTP
+const server = http.createServer(app);
+const io = socketIo(server);
 
 // Conectar a la instancia VM de Oracle
 function connectToOracleVM(command) {
@@ -24,10 +24,10 @@ function connectToOracleVM(command) {
         if (err) return reject(err);
   
         stream.on('close', (code, signal) => {
-          resolve({ code, signal, output });
+          resolve({ code, signal });
         }).on('data', (data) => {
-          output += data.toString('utf8');
-          console.log(output);
+          // Emitir datos a todos los clientes conectados a través de WebSocket
+          io.emit('output', data.toString('utf8'));
         }).stderr.on('data', (data) => {
           console.error('STDERR: ' + data);
         });
@@ -63,7 +63,6 @@ app.post('/encender', async (req, res) => {
 
 app.post('/apagar', async (req, res) => {
   try {
-    
     const command = `sudo killall screen && cd ..`;
     await connectToOracleVM(command);
     res.send('Servidor apagado correctamente.');
@@ -75,7 +74,6 @@ app.post('/apagar', async (req, res) => {
 
 app.post('/reiniciar', async (req, res) => {
   try {
-    
     const command = `sudo reboot`;
     await connectToOracleVM(command);
     res.send('Servidor apagado correctamente.');
@@ -85,12 +83,13 @@ app.post('/reiniciar', async (req, res) => {
   }
 });
 
-app.get('/console-output', (req, res) => {
-  res.send(output);
+// WebSocket para manejar la salida del servidor en tiempo real
+io.on('connection', (socket) => {
+  console.log('Cliente conectado');
 });
 
 // Iniciar el servidor web
-const PORT = process.env.PORT || 3000;;
-app.listen(PORT, () => {
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
   console.log(`Servidor web iniciado en el puerto ${PORT}`);
 });
