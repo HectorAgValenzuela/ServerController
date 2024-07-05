@@ -40,6 +40,9 @@ function connectToOracleVM(command) {
         stream.write(command + '\n');
         stream.end('exit\n');
       });
+    }).on('error', (err) => {
+      console.error('Error en la conexión SSH:', err);
+      reject(err);
     }).connect({
         host: process.env.host,
         port: process.env.portServer,
