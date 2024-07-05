@@ -9,6 +9,7 @@ const socketIo = require('socket.io');
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
+app.use(express.static('public')); 
 
 // Crear servidor HTTP
 const server = http.createServer(app);

@@ -4,7 +4,8 @@
   "description": "Connection to a oracle instance",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
@@ -15,5 +16,8 @@
     "socket.io": "^4.7.5",
     "ssh2": "^1.15.0",
     "ssh2-sftp-client": "^10.0.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
   }
 }
