@@ -19,21 +19,17 @@
     <video src="./media/videoplayback.mp4" width="600px" height="250px" controls></video>
 
     <div class="botones">
-      <div class="boton">
-        <form id="encender-form">
-          <button type="submit" name="fix">Encender Servidor</button>
-        </form>
-      </div>
+      <form id="encender-form" class="boton">
+        <button type="submit" name="fix">Encender Servidor</button>
+      </form>
 
       <form id="apagar-form" class="boton">
         <button type="submit" name="fix">Apagar Servidor</button>
       </form>
 
-      <div class="boton">
-        <form id="reiniciar-form">
-          <button type="submit" name="fix">Reiniciar máquina</button>
-        </form>
-      </div>
+      <form id="reiniciar-form" class="boton">
+        <button type="submit" name="fix">Reiniciar máquina</button>
+      </form>
     </div>
   </section>
 
@@ -43,6 +39,6 @@
   <footer>Rocket Source 2024 &copy;</footer>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script src="./app.js"></script>
+  <script src="./index.js"></script>
 </body>
 </html>

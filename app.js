@@ -27,8 +27,11 @@ function connectToOracleVM(command) {
         stream.on('close', (code, signal) => {
           resolve({ code, signal });
         }).on('data', (data) => {
+          let output = data.toString('utf8');
+          console.log(output);
+
           // Emitir datos a todos los clientes conectados a través de WebSocket
-          io.emit('output', data.toString('utf8'));
+          io.emit('output', output);
         }).stderr.on('data', (data) => {
           console.error('STDERR: ' + data);
         });
