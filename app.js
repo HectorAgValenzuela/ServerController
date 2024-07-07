@@ -70,8 +70,16 @@ app.post('/encender', async (req, res) => {
 
 app.post('/apagar', async (req, res) => {
   try {
-    const command = `sudo killall screen && cd ..`;
-    await connectToOracleVM(command);
+
+    // Comando para guardar el progreso
+    const saveCommand = `screen -S ${process.env.serverDirectory} -X stuff "save-all\n"`;
+    await connectToOracleVM(saveCommand);
+    
+    // Esperar un par de segundos para asegurarse de que el progreso se guarda
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const killCommand = `sudo killall screen && cd ..`;
+    await connectToOracleVM(killCommand);
     res.send('Servidor apagado correctamente.');
   } catch (error) {
     console.error('Error al apagar el servidor:', error);
@@ -81,8 +89,16 @@ app.post('/apagar', async (req, res) => {
 
 app.post('/reiniciar', async (req, res) => {
   try {
-    const command = `sudo reboot`;
-    await connectToOracleVM(command);
+
+    // Comando para guardar el progreso
+    const saveCommand = `screen -S ${process.env.serverDirectory} -X stuff "save-all\n"`;
+    await connectToOracleVM( saveCommand );
+    
+    // Esperar un par de segundos para asegurarse de que el progreso se guarda
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    const restartCommand = `sudo reboot`;
+    await connectToOracleVM( restartCommand );
     res.send('Servidor apagado correctamente.');
   } catch (error) {
     console.error('Error al apagar el servidor:', error);
